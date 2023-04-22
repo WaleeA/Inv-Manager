@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Page</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <a href="index.html"
+          ><img src="images/Logo.png" alt="Logo" class="logo"
+        /></a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="inventory.html">Inventory Manager</a></li>
+          <li><a href="fees.html">Fees calculator</a></li>
+          <li><a href="account.html">Login / Sign-Up</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Page content goes here -->
+      <h1>Account PAGE</h1>
+      <p>
+        Log in to access your account or sign up now to get access to the
+        inventory Manager.
+      </p>
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+      <!-- Add Firebase Auth SDK -->
+      <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+      <!-- Include your custom Firebase configuration file -->
+      <script src="src/firebase-config.js"></script>
+
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input
+          type="password"
+          id="login-password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+
+      <form id="signup-form">
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input
+          type="password"
+          id="signup-password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <script>
+        // Get elements
+        const loginEmail = document.getElementById("login-email");
+        const loginPassword = document.getElementById("login-password");
+        const loginForm = document.getElementById("login-form");
+
+        const signupEmail = document.getElementById("signup-email");
+        const signupPassword = document.getElementById("signup-password");
+        const signupForm = document.getElementById("signup-form");
+
+        // Listen for login form submit
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Get email and password
+          const email = loginEmail.value;
+          const password = loginPassword.value;
+
+          // Sign in with email and password
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .catch((error) => {
+              console.error("Error logging in:", error);
+            });
+        });
+
+        // Listen for signup form submit
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Get email and password
+          const email = signupEmail.value;
+          const password = signupPassword.value;
+
+          // Create user with email and password
+          firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .catch((error) => {
+              console.error("Error signing up:", error);
+            });
+        });
+
+        // Listen for authentication state changes
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            console.log("User signed in:", user);
+          } else {
+            // User is signed out
+            console.log("User signed out");
+          }
+        });
+      </script>
+    </main>
+
+    <footer>
+      <p>&copy; Project by Walee Ahmed 2023</p>
+    </footer>
+  </body>
+</html>

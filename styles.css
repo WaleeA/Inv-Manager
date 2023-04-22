@@ -1,0 +1,105 @@
+html {
+  scroll-behavior: smooth;
+}
+
+/* Set the page to dark mode */
+body {
+  font-family: "Helvetica", sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+.m-account {
+  text-align: center;
+}
+
+/* Align the nav links and logo horizontally */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #1f1f1f;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 75px;
+  height: auto;
+  margin-right: 20px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav li {
+  margin-left: 20px;
+}
+
+nav a {
+  color: #efefef;
+  text-decoration: none;
+  position: relative;
+}
+
+nav a:hover {
+  color: #a0a0a0;
+}
+
+nav a::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #a0a0a0;
+  visibility: hidden;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+}
+
+nav a:hover::before {
+  visibility: visible;
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+/* Set up the main content and footer */
+main {
+  padding: 20px;
+}
+
+footer {
+  background-color: #1f1f1f;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.back-to-top {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.back-to-top:hover {
+  background-color: #f0f0f0;
+  color: #1f1f1f;
+  text-decoration: none;
+}
