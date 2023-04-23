@@ -68,6 +68,7 @@ function App() {
   const [sneakers, setSneakers] = useState([]);
   const [selectedSneaker, setSelectedSneaker] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dummy, setDummy] = useState(0); // Dummy state to force re-render
   const [formMode, setFormMode] = useState("create");
   const [newSneaker, setNewSneaker] = useState({
     email: "",
@@ -169,6 +170,7 @@ function App() {
         [name]: value,
       }));
     }
+    setDummy(Math.random());
   }
 
   async function handleUpdate(sneaker) {
