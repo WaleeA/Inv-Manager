@@ -1,0 +1,24 @@
+{
+  "items": {
+    "item1": {
+      "name": "Item 1",
+      "brand": "Brand 1",
+      "shoeSize": 10,
+      "datePurchased": "2023-01-01",
+      "purchasePrice": 100,
+      "soldPrice": 150,
+      "soldDate": "2023-02-01",
+      "saleLocation": "Store A"
+    },
+    "item2": {
+      "name": "Item 2",
+      "brand": "Brand 2",
+      "shoeSize": 9,
+      "datePurchased": "2023-01-15",
+      "purchasePrice": 120,
+      "soldPrice": 180,
+      "soldDate": "2023-02-10",
+      "saleLocation": "Store B"
+    }
+  }
+}
