@@ -209,8 +209,8 @@ function App() {
             <th>Sold Price</th>
             <th>Sold Date</th>
             <th>Is Sold</th>
-            <th>Profit / Loss</th>
             <th>Sold Location</th>
+            <th>Profit / Loss</th>
           </tr>
         </thead>
         <tbody>
