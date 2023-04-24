@@ -22,7 +22,91 @@ header {
   padding: 10px 20px;
   background-color: #1f1f1f;
 }
+.fees-title-text {
+  padding-inline: 3rem;
+  text-align: center;
+  font-weight: 500;
+  color: #f0f0f0;
+  margin: 0;
+}
+.top-slogan {
+  padding-top: 4.5rem;
+  padding-inline: 2rem;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 450;
+  color: #f0f0f0;
+  margin: 0;
+  padding-bottom: 6.5rem;
+}
+.mid-text {
+  padding-top: 0.2rem;
+  padding-inline: 5rem;
+  text-align: center;
+  font-weight: 300;
+  color: #f0f0f0;
+  margin: 0;
+  padding-bottom: 0.2rem;
+}
 
+.im-body {
+  text-align: right;
+  padding-inline: 1rem;
+}
+section {
+  padding-block: 5rem;
+  padding-inline: 1rem;
+  margin: 0;
+}
+
+.section-break {
+  padding-block: 0.5rem;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  padding-inline: 1rem;
+}
+
+.section-title-im {
+  font-size: 1.75rem;
+  padding-inline: 1rem;
+  text-align: right;
+}
+.fees-wrapper,
+.inventory-wrapper {
+  margin-inline: auto;
+  padding-inline: 1rem; /* Change padding-inline from 1rem to 0 */
+  justify-content: center;
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(50% - 20px);
+}
+
+.fees-image,
+.inventory-image {
+  display: inline-block;
+  vertical-align: middle;
+  justify-content: center;
+  width: 100%; /* adjust the width as needed */
+  max-width: 200px; /* adjust the max-width as needed */
+  margin: 0 20px; /* adjust the margin as needed */
+}
+.diagonal {
+  --skew-angle: -3deg;
+  --background: linear-gradient(45deg, #0575e6, #00f260);
+  position: relative;
+  isolation: isolate;
+}
+
+.diagonal::after {
+  content: "";
+  background: var(--background);
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  transform: skewY(var(--skew-angle));
+}
 .logo-container {
   display: flex;
   align-items: center;
@@ -81,6 +165,60 @@ main {
   padding: 20px;
 }
 
+.button-container {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding-bottom: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #1e90ff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+
+.button:hover {
+  background-color: #01d9fa;
+  transition: background-color 0.5s;
+}
+
+.wavy {
+  /* mask created with 
+  https://css-generators.com/wavy-shapes/ */
+
+  background: linear-gradient(to right, #00f260, #0575e6);
+
+  --mask: radial-gradient(50.39px at 50% 68.75px, #000 99%, #0000 101%)
+      calc(50% - 50px) 0/100px 51% repeat-x,
+    radial-gradient(50.39px at 50% -43.75px, #0000 99%, #000 101%) 50% 25px/100px
+      calc(51% - 25px) repeat-x,
+    radial-gradient(50.39px at 50% calc(100% - 68.75px), #000 99%, #0000 101%)
+      calc(50% - 50px) 100%/100px 51% repeat-x,
+    radial-gradient(50.39px at 50% calc(100% + 43.75px), #0000 99%, #000 101%)
+      50% calc(100% - 25px) / 100px calc(51% - 25px) repeat-x;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.middle-image {
+  width: 100%; /* adjust the width as needed */
+  max-width: 300px; /* adjust the max-width as needed */
+  margin: 0 20px; /* adjust the margin as needed */
+}
+
 footer {
   background-color: #1f1f1f;
   padding: 10px 20px;
@@ -102,4 +240,18 @@ footer {
   background-color: #f0f0f0;
   color: #1f1f1f;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .fees-wrapper,
+  .inventory-wrapper {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .fees-image,
+  .inventory-image {
+    display: block;
+    margin: 0 auto 20px;
+  }
 }

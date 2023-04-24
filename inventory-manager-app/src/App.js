@@ -1,7 +1,67 @@
 import React, { useState, useEffect } from "react";
-import PocketBase from "pocketbase";
+import "./App.css";
+import pb from "./lib/pocketbase.js";
+import {
+  Container,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Typography,
+  Switch,
+  useMediaQuery,
+  Grid,
+  FormControl,
+  Box,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const pb = new PocketBase("http://127.0.0.1:8090");
+const theme = createTheme({
+  palette: {
+    mode: "light", // Set the default mode
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+});
+
+function DarkModeToggle({ darkMode, onToggle }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: "8px",
+      }}
+    >
+      <Typography>Dark mode</Typography>
+      <Switch checked={darkMode} onChange={onToggle} />
+    </div>
+  );
+}
+
 const data = {
   email: "test",
   shoeName: "test",
@@ -44,23 +104,13 @@ async function fetchSneakers(setSneakers, searchQuery = "") {
   let filter = 'created >= "2022-01-01 00:00:00"';
 
   if (searchQuery) {
-    filter += ` && (shoeName contains "${searchQuery}" || brand contains "${searchQuery}")`;
+    filter += ` && (shoeName match "${searchQuery}" || brand match "${searchQuery}")`;
   }
-
-  const resultList = await pb.collection("shoes_db").getList(1, 50, {
-    filter: 'created >= "2022-01-01 00:00:00" && someField1 != someField2',
-  });
 
   const records = await pb.collection("shoes_db").getFullList({
     filter,
     sort: "-created",
   });
-
-  const record = await pb
-    .collection("shoes_db")
-    .getFirstListItem('someField="test"', {
-      expand: "relField1,relField2.subRelField",
-    });
   setSneakers(records);
 }
 
@@ -109,13 +159,6 @@ function App() {
     fetchSneakers(setSneakers);
   }, []);
 
-  async function fetchSneakers() {
-    const records = await pb.collection("shoes_db").getFullList({
-      sort: "-created",
-    });
-    setSneakers(records);
-  }
-
   function handleSearch() {
     fetchSneakers(setSneakers, searchQuery); // Pass setSneakers as an argument
   }
@@ -127,28 +170,36 @@ function App() {
       return;
     }
     await createSneaker(newSneaker);
-    fetchSneakers(); // Refresh the sneakers list after creating a new item
+    fetchSneakers(setSneakers); // Refresh the sneakers list after creating a new item
     // Reset the form
+
     setNewSneaker({ emptySneaker });
+    setDummy(Math.random());
   }
   async function handleFormSubmit(e) {
     e.preventDefault();
 
     const sneakerData = {
       ...newSneaker,
-      purchaseDate: newSneaker.purchaseDate || null,
+      purchaseDate:
+        newSneaker.purchaseDate === "" ? null : newSneaker.purchaseDate,
       soldDate: newSneaker.soldDate === "" ? null : newSneaker.soldDate,
     };
 
+    console.log("sneakerData before submission:", sneakerData); // Add this line
+
     if (formMode === "create") {
       await createSneaker(sneakerData);
+      setDummy(Math.random());
     } else {
       await updateSneaker(newSneaker.id, sneakerData);
+      setDummy(Math.random());
     }
 
-    fetchSneakers(); // Refresh the sneakers list after updating or creating a record
+    fetchSneakers(setSneakers); // Refresh the sneakers list after updating or creating a record
     setFormMode("create"); // Reset the form mode to "create"
     setNewSneaker({ ...emptySneaker, purchaseDate: getCurrentDateTime() }); // Reset the form fields
+    setDummy(Math.random());
   }
 
   function handleChange(e) {
@@ -170,7 +221,6 @@ function App() {
         [name]: value,
       }));
     }
-    setDummy(Math.random());
   }
 
   async function handleUpdate(sneaker) {
@@ -182,151 +232,216 @@ function App() {
     e.preventDefault();
     if (selectedSneaker) {
       await updateSneaker(selectedSneaker.id, selectedSneaker);
-      fetchSneakers(); // Refresh the sneakers list after updating an item
+      fetchSneakers(setSneakers); // Refresh the sneakers list after updating an item
       setSelectedSneaker(null); // Reset the selected sneaker
     }
   }
 
   async function handleDelete(recordId) {
     await deleteSneaker(recordId);
-    fetchSneakers(); // Refresh the sneakers list after deleting an item
+    fetchSneakers(setSneakers); // Refresh the sneakers list after deleting an item
+    setDummy(Math.random());
   }
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search by shoe name or brand"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Shoe Name</th>
-            <th>Brand</th>
-            <th>Purchase Price</th>
-            <th>Purchase Date</th>
-            <th>Sold Price</th>
-            <th>Sold Date</th>
-            <th>Is Sold</th>
-            <th>Sold Location</th>
-            <th>Profit / Loss</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sneakers.map((sneaker) => (
-            <tr key={sneaker.id}>
-              <td>{sneaker.shoeName}</td>
-              <td>{sneaker.brand}</td>
-              <td>{sneaker.purchasePrice}</td>
-              <td>{sneaker.purchaseDate}</td>
-              <td>{sneaker.soldPrice}</td>
-              <td>{sneaker.soldDate}</td>
-              <td>{sneaker.isSold ? "Yes" : "No"}</td>
-              <td>{sneaker.soldLocation}</td>
-              <td>
-                {sneaker.soldPrice
-                  ? sneaker.soldPrice - sneaker.purchasePrice
-                  : ""}
-              </td>
-              <td>
-                <button onClick={() => handleUpdate(sneaker)}>Update</button>
-                <button onClick={() => handleDelete(sneaker.id)}>Delete</button>
-              </td>
+    <Container>
+      <Paper>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <TextField
+              type="text"
+              placeholder="Search by shoe name or brand"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Button variant="contained" color="primary" onClick={handleSearch}>
+              Search
+            </Button>
+          </Grid>
+        </Grid>
+        <table>
+          <thead>
+            <tr>
+              <th>Shoe Name</th>
+              <th>Brand</th>
+              <th>Purchase Price</th>
+              <th>Purchase Date</th>
+              <th>Sold Price</th>
+              <th>Sold Date</th>
+              <th>Is Sold</th>
+              <th>Sold Location</th>
+              <th>Profit / Loss</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sneakers.map((sneaker) => (
+              <tr key={sneaker.id}>
+                <td>{sneaker.shoeName}</td>
+                <td>{sneaker.brand}</td>
+                <td>{sneaker.purchasePrice}</td>
+                <td>{sneaker.purchaseDate}</td>
+                <td>{sneaker.soldPrice}</td>
+                <td>{sneaker.soldDate}</td>
+                <td>{sneaker.isSold ? "Yes" : "No"}</td>
+                <td>{sneaker.soldLocation}</td>
+                <td>
+                  {sneaker.soldPrice
+                    ? sneaker.soldPrice - sneaker.purchasePrice
+                    : ""}
+                </td>
+                <td>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleUpdate(sneaker)}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDelete(sneaker.id)}
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Paper>
       <form onSubmit={handleFormSubmit}>
         <label>
-          Email:
-          <input
+          <TextField
+            label="Email"
             type="text"
             name="email"
             value={newSneaker.email}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
         <label>
-          Shoe Name:
-          <input
+          <TextField
+            label="Shoe Name"
             type="text"
             name="shoeName"
             value={newSneaker.shoeName}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
         <label>
-          Brand:
-          <input
+          <TextField
+            label="Brand"
             type="text"
             name="brand"
             value={newSneaker.brand}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
         <label>
-          Purchase Price:
-          <input
+          <TextField
+            label="Purchase Price"
             type="number"
             name="purchasePrice"
             value={newSneaker.purchasePrice}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
         <label>
-          Sold Price:
-          <input
+          <TextField
+            label="Sold Price"
             type="number"
             name="soldPrice"
             value={newSneaker.soldPrice}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
         <label>
-          Purchase Date:
-          <input
+          <TextField
+            label="Purchase Date"
             type="datetime-local"
             name="purchaseDate"
             value={newSneaker.purchaseDate}
             onChange={handleChange}
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </label>
         <label>
-          Sold Date (optional):
-          <input
+          <TextField
+            label="Sold Date (optional)"
             type="datetime-local"
             name="soldDate"
-            value={newSneaker.soldDate}
+            value={newSneaker.soldDate || ""}
             onChange={handleChange}
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </label>
         <label>
-          Is Sold:
-          <input
-            type="checkbox"
-            name="isSold"
-            checked={newSneaker.isSold}
-            onChange={(e) => handleChange({ ...e, value: e.target.checked })}
-          />
-        </label>
-        <label>
-          Sold Location:
-          <input
+          <TextField
+            label="Sold Location"
             type="text"
             name="soldLocation"
             value={newSneaker.soldLocation}
             onChange={handleChange}
+            variant="outlined"
           />
         </label>
-        <button type="submit">
-          {formMode === "create" ? "Create Record" : "Update Record"}
-        </button>
+        <label>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="isSold"
+                checked={newSneaker.isSold}
+                onChange={(e) =>
+                  handleChange({ ...e, value: e.target.checked })
+                }
+              />
+            }
+            label="Is Sold"
+          />
+        </label>
+        <Grid item xs={12}>
+          <Box mt={2}>
+            <Button fullWidth variant="contained" color="primary" type="submit">
+              {formMode === "create" ? "Create Record" : "Update Record"}
+            </Button>
+          </Box>
+        </Grid>
       </form>
-    </div>
+    </Container>
   );
 }
 
-export default App;
+function Main() {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [darkMode, setDarkMode] = useState(prefersDarkMode);
+
+  const appliedTheme = darkMode ? darkTheme : theme;
+
+  const handleDarkModeToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
+    <ThemeProvider theme={appliedTheme}>
+      <DarkModeToggle darkMode={darkMode} onToggle={handleDarkModeToggle} />
+      <App />
+    </ThemeProvider>
+  );
+}
+
+export default Main;

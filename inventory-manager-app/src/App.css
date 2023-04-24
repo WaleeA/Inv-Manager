@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(56, 55, 55);
 }
 
 .App-link {
@@ -35,4 +35,22 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+table {
+  font-family: Arial, Helvetica, sans-serif, sans-serif;
+  font-weight: 300;
+  border-collapse: collapse;
+}
+
+html {
+  --text-color-normal: #0a244d;
+  --text-color-light: #8cabd9;
+}
+
+html[data-theme="dark"] {
+  --text-color-normal: hsl(210, 10%, 62%);
+  --text-color-light: hsl(210, 15%, 35%);
+  --text-color-richer: hsl(210, 50%, 72%);
+  --text-color-highlight: hsl(25, 70%, 45%);
 }
