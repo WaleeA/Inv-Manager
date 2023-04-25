@@ -36,9 +36,17 @@ header {
   font-size: 26px;
   font-weight: 450;
   color: #f0f0f0;
+  transition: color 1.1s ease;
   margin: 0;
   padding-bottom: 6.5rem;
+  opacity: 0;
+  animation: fadeIn 1s ease-in-out forwards;
 }
+.top-slogan:hover {
+  color: #a1ff9a; /* change the text color on hover */
+  transition: color 2.5s ease-in-out;
+}
+
 .mid-text {
   padding-top: 0.2rem;
   padding-inline: 5rem;
@@ -117,6 +125,10 @@ section {
   height: auto;
   margin-right: 20px;
 }
+.logo:hover {
+  transform: scale(1.1);
+  transition: transform 0.7s;
+}
 
 nav ul {
   list-style-type: none;
@@ -137,6 +149,8 @@ nav a {
 
 nav a:hover {
   color: #a0a0a0;
+  font-size: 1.2rem;
+  transition: font-size 0.5s;
 }
 
 nav a::before {
@@ -253,5 +267,14 @@ footer {
   .inventory-image {
     display: block;
     margin: 0 auto 20px;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

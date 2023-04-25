@@ -7,20 +7,15 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
   Paper,
   Typography,
   Switch,
   useMediaQuery,
   Grid,
-  FormControl,
   Box,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+//import { isUserValid, login, signout, signup } from "./lib/auth";
 
 const theme = createTheme({
   palette: {
@@ -73,6 +68,7 @@ const data = {
   isSold: true,
   soldLocation: "test",
   profitLoss: 123,
+  //email: pb.authStore.model.id,
 };
 
 // Create function
@@ -314,7 +310,11 @@ function App() {
         </table>
       </Paper>
       <form onSubmit={handleFormSubmit}>
-        <label>
+        <label
+          style={{
+            marginRight: "10px",
+          }}
+        >
           <TextField
             label="Email"
             type="text"
@@ -324,7 +324,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Shoe Name"
             type="text"
@@ -334,7 +334,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Brand"
             type="text"
@@ -344,7 +344,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Purchase Price"
             type="number"
@@ -354,7 +354,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Sold Price"
             type="number"
@@ -364,7 +364,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Purchase Date"
             type="datetime-local"
@@ -377,7 +377,7 @@ function App() {
             }}
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Sold Date (optional)"
             type="datetime-local"
@@ -390,7 +390,7 @@ function App() {
             }}
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <TextField
             label="Sold Location"
             type="text"
@@ -400,7 +400,7 @@ function App() {
             variant="outlined"
           />
         </label>
-        <label>
+        <label style={{ marginRight: "10px" }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -427,7 +427,7 @@ function App() {
 }
 
 function Main() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: light)");
   const [darkMode, setDarkMode] = useState(prefersDarkMode);
 
   const appliedTheme = darkMode ? darkTheme : theme;
